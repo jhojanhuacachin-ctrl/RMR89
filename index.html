@@ -1,0 +1,602 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Calculadora RMR 1989 - ajustada</title>
+<style>
+:root{
+  --line:#263a52; --text:#f4f7fb; --muted:#9fb0c4; --blue:#1e88e5; --green:#4ade80;
+  --yellow:#ffc928; --orange:#ff8a00; --red:#ff4d4f; --purple:#8b5cf6;
+  --shadow:0 18px 40px rgba(0,0,0,.35);
+}
+*{box-sizing:border-box}
+body{
+  margin:0;
+  background:
+  radial-gradient(circle at 8% -10%, rgba(30,136,229,.28), transparent 25%),
+  radial-gradient(circle at 80% 0%, rgba(255,201,40,.13), transparent 25%),
+  linear-gradient(135deg,#050b13,#091521 55%,#050b13);
+  color:var(--text); font-family:Inter,Segoe UI,Arial,sans-serif;
+}
+.wrap{max-width:1480px;margin:0 auto;padding:18px}
+header{display:flex;justify-content:space-between;align-items:center;gap:18px;padding:8px 0 22px}
+.brand{display:flex;align-items:center;gap:16px}
+.logo{
+  width:70px;height:70px;border-radius:50%;display:grid;place-items:center;
+  background:radial-gradient(circle at 35% 35%,#2f4b77,#081323);
+  box-shadow:0 0 22px rgba(78,141,238,.35); border:1px solid #49617f; font-size:34px;
+}
+.brand h1{margin:0;font-size:30px}
+.brand h1 span{color:var(--yellow)}
+.brand p{margin:5px 0 0;color:#dbe7f7;font-weight:700}
+.top-actions{display:flex;gap:14px;flex-wrap:wrap}
+button{
+  border:1px solid #36506f;border-radius:9px;padding:13px 18px;background:#16243a;color:var(--text);
+  font-weight:900;cursor:pointer;box-shadow:inset 0 1px 0 rgba(255,255,255,.07)
+}
+button.green{background:#138a42;border-color:#1db954}
+button.blue{background:#1565c0;border-color:#2d8cff}
+.layout{display:grid;grid-template-columns:560px 1fr;gap:18px}
+.panel,.visual,.classification,.table-panel,.detail-panel{
+  background:linear-gradient(180deg,rgba(19,34,52,.98),rgba(9,18,29,.98));
+  border:1px solid var(--line);border-radius:12px;box-shadow:var(--shadow);overflow:hidden
+}
+.panel + .panel{margin-top:16px}
+.panel-title{
+  padding:14px 18px;font-weight:950;text-transform:uppercase;letter-spacing:.2px;
+  display:flex;align-items:center;gap:10px;border-bottom:1px solid rgba(255,255,255,.06);
+  background:linear-gradient(90deg,rgba(30,136,229,.35),rgba(30,136,229,.08))
+}
+.panel-title.purple{background:linear-gradient(90deg,rgba(139,92,246,.38),rgba(139,92,246,.08))}
+.panel-title.green{background:linear-gradient(90deg,rgba(34,197,94,.35),rgba(34,197,94,.08))}
+.panel-title.gold{background:linear-gradient(90deg,rgba(255,138,0,.33),rgba(255,138,0,.07))}
+.ico{
+  width:30px;height:30px;border-radius:9px;display:grid;place-items:center;background:rgba(255,255,255,.12);
+  color:var(--yellow);border:1px solid rgba(255,255,255,.13)
+}
+.panel-body{padding:16px}
+.hint{color:var(--muted);font-size:13px;margin:0 0 14px}
+.row{
+  display:grid;grid-template-columns:36px 1fr 190px 58px;gap:10px;align-items:center;
+  padding:8px 0;border-bottom:1px solid rgba(255,255,255,.04)
+}
+.row:last-child{border-bottom:0}
+.code{font-weight:950;color:#d7e8ff}
+.label{font-size:13px;font-weight:800;line-height:1.15;color:#e5edf8}
+select{width:100%;padding:10px 12px;border-radius:7px;background:#172333;color:#e8f0fa;border:1px solid #33475f;outline:none}
+.score{font-size:18px;font-weight:950;color:var(--green);text-align:center}
+.rmrb-line{
+  margin-top:10px;padding:16px;border-top:1px solid rgba(255,255,255,.08);display:grid;
+  grid-template-columns:1fr 70px;align-items:center;gap:12px;font-size:18px;font-weight:950
+}
+.big-number{font-size:30px;color:var(--yellow);font-weight:950;text-align:right}
+.orient-grid{display:grid;grid-template-columns:1fr 1fr 70px;gap:12px;align-items:end}
+.results-box{
+  display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;padding:12px;background:#07111d;border:1px solid #234763;border-radius:8px
+}
+.metric{text-align:center;border-right:1px solid #244763}
+.metric:last-child{border-right:0}
+.metric small{display:block;color:#c2d4e8;font-weight:800;font-size:12px}
+.metric strong{display:block;margin-top:8px;font-size:30px;color:var(--yellow)}
+.metric .red{color:var(--red)} .metric .green{color:var(--green)}
+.class-card{margin-top:14px;display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.class-left,.class-right{background:#0a1522;border:1px solid #24546a;border-radius:9px;padding:14px}
+.stars{font-size:24px;color:var(--yellow);letter-spacing:2px}
+.star-off{color:#3d4b5c}
+.main{display:grid;grid-template-rows:auto auto auto;gap:16px}
+.classification{background:linear-gradient(180deg,rgba(255,138,0,.08),rgba(7,15,25,.98))}
+.class-summary{
+  display:grid;grid-template-columns:1fr 1fr 1fr;border:1px solid #3a526d;margin:14px;border-radius:8px;overflow:hidden;background:#06101b
+}
+.summary-cell{text-align:center;padding:18px;border-right:1px solid #3a526d}
+.summary-cell:last-child{border-right:0}
+.summary-cell small{color:#c2d4e8;font-weight:800}
+.summary-cell strong{display:block;margin-top:8px;font-size:25px}
+.info-strip{background:linear-gradient(90deg,#0a3f78,#0b2645);padding:13px 18px;text-align:center;color:#e3f0ff}
+.result-banner{
+  margin:14px 14px 0;background:linear-gradient(90deg,#173657,#244e76);border:1px solid #3f6691;border-radius:10px;
+  padding:12px 16px;font-weight:900;color:#fff
+}
+.visual-head{display:flex;justify-content:space-between;align-items:center;padding:14px 18px;border-bottom:1px solid rgba(255,255,255,.06);font-weight:950}
+.toggle{font-size:12px;background:#1d8c45;color:#fff;padding:5px 9px;border-radius:999px;margin-left:8px}
+.gifbox{margin:14px;background:#0a1422;border:1px solid #263a52;border-radius:10px;padding:14px;text-align:center}
+.gifbox img{max-width:100%;border-radius:8px;border:1px solid #263a52}
+.support-cards{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:14px}
+.support-card{background:#111d2d;border:1px solid #2a3f58;border-radius:10px;padding:13px;min-height:145px}
+.support-card h4{margin:0 0 8px;color:#dceaff;text-transform:uppercase;font-size:12px}
+.support-card p{margin:0;color:#d7e1ed;font-size:13px;line-height:1.35}
+.detail-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;padding:14px}
+.detail-card{background:#0a1522;border:1px solid #24546a;border-radius:10px;padding:14px}
+.detail-card h4{margin:0 0 8px;color:#ffd966}
+.detail-card p{margin:0;color:#dce6f2;font-size:14px;line-height:1.4}
+table{width:100%;border-collapse:collapse;font-size:13px}
+th,td{border:1px solid #263a52;padding:10px;vertical-align:top}
+th{background:#17263b;color:#e7f0fb;text-transform:uppercase;font-size:12px}
+td{color:#dce6f2}
+tr.active-row td{background:rgba(255,201,40,.12)}
+.class-pill{display:inline-block;padding:8px 12px;border-radius:7px;font-weight:950;color:#fff}
+.c1{background:#137a3d}.c2{background:#2c7a2b}.c3{background:#b59a00}.c4{background:#b45309}.c5{background:#9f1d1d}
+.note{padding:11px 14px;color:#b8c7d9;font-size:12px;border-top:1px solid #263a52}
+.legend{display:flex;justify-content:center;gap:28px;flex-wrap:wrap;color:#d6e3f3;font-size:13px;padding:12px}
+.modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.72);z-index:20;align-items:center;justify-content:center;padding:18px}
+.modal.open{display:flex}
+.modal-content{max-width:1050px;max-height:90vh;overflow:auto;background:#101b2a;border:1px solid #39516d;border-radius:14px;padding:22px;box-shadow:var(--shadow)}
+.modal h2{margin-top:0;color:var(--yellow)}
+.modal li{margin-bottom:8px;color:#dce6f2}
+.modal-table{width:100%;margin-top:10px;font-size:13px}
+.modal-table th,.modal-table td{border:1px solid #38506b;padding:8px}
+.modal-table th{background:#1b2d44}
+@media(max-width:1100px){
+  .layout{grid-template-columns:1fr}.support-cards,.class-summary,.results-box,.class-card,.detail-grid{grid-template-columns:1fr}
+  .summary-cell,.metric{border-right:0;border-bottom:1px solid #3a526d}
+  .summary-cell:last-child,.metric:last-child{border-bottom:0}
+  .row{grid-template-columns:34px 1fr}.row select,.row .score{grid-column:2}
+  header{align-items:flex-start;flex-direction:column}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="brand">
+      <div class="logo">⛰️</div>
+      <div>
+        <h1>CALCULADORA <span>RMR 1989</span></h1>
+        <p>Clasificación del Macizo Rocoso – Español peruano 🇵🇪</p>
+      </div>
+    </div>
+    <div class="top-actions">
+      <button onclick="openGuide()">📖 Guía rápida</button>
+      <button onclick="openFormulaGuide()">🧮 Guía de fórmulas</button>
+      <button class="green" onclick="resetAll()">♻ Limpiar</button>
+      <button class="blue" onclick="window.print()">🖨 Imprimir / PDF</button>
+    </div>
+  </header>
+
+  <div class="layout">
+    <aside>
+      <section class="panel">
+        <div class="panel-title"><span class="ico">📋</span> 1. Ingreso de datos</div>
+        <div class="panel-body">
+          <p class="hint">Ingrese los valores y seleccione las opciones según sus datos.</p>
+          <div class="row">
+            <div class="code">R1</div><div class="label">Resistencia a la compresión simple de la roca intacta (MPa)</div>
+            <select id="r1">
+              <option value="15">&gt; 250 MPa</option>
+              <option value="12">100 - 250 MPa</option>
+              <option value="7" selected>50 - 100 MPa</option>
+              <option value="4">25 - 50 MPa</option>
+              <option value="2">5 - 25 MPa</option>
+              <option value="1">1 - 5 MPa</option>
+              <option value="0">&lt; 1 MPa</option>
+            </select><div class="score" id="scoreR1">7</div>
+          </div>
+          <div class="row">
+            <div class="code">R2</div><div class="label">RQD (%)</div>
+            <select id="r2">
+              <option value="20">90 - 100%</option>
+              <option value="17">75 - 90%</option>
+              <option value="13" selected>50 - 75%</option>
+              <option value="6">25 - 50%</option>
+              <option value="3">&lt; 25%</option>
+            </select><div class="score" id="scoreR2">13</div>
+          </div>
+          <div class="row">
+            <div class="code">R3</div><div class="label">Espaciamiento de las discontinuidades</div>
+            <select id="r3">
+              <option value="20">&gt; 2 m</option>
+              <option value="15">0.6 - 2 m</option>
+              <option value="10" selected>0.2 - 0.6 m</option>
+              <option value="8">0.06 - 0.2 m</option>
+              <option value="5">&lt; 0.06 m</option>
+            </select><div class="score" id="scoreR3">10</div>
+          </div>
+          <div class="row">
+            <div class="code">R4</div><div class="label">Condición de las discontinuidades</div>
+            <select id="r4">
+              <option value="30">Muy rugosas / cerradas</option>
+              <option value="25">Rugosas / ligeramente abiertas</option>
+              <option value="20" selected>Ligeramente rugosas / abiertas</option>
+              <option value="10">Pulidas / estriadas / abiertas</option>
+              <option value="6">Relleno duro &lt; 5 mm</option>
+              <option value="0">Relleno blando &gt; 5 mm / continuas</option>
+            </select><div class="score" id="scoreR4">20</div>
+          </div>
+          <div class="row">
+            <div class="code">R5</div><div class="label">Condición de agua subterránea</div>
+            <select id="r5">
+              <option value="15">Completamente seco</option>
+              <option value="10" selected>Húmedo</option>
+              <option value="7">Mojado / goteando poco</option>
+              <option value="4">Goteando</option>
+              <option value="0">Fluyendo</option>
+            </select><div class="score" id="scoreR5">10</div>
+          </div>
+          <div class="rmrb-line">
+            <div>RMRb (básico) = suma de R1 + R2 + R3 + R4 + R5</div>
+            <div class="big-number" id="rmrb">60</div>
+          </div>
+        </div>
+      </section>
+
+      <section class="panel">
+        <div class="panel-title purple"><span class="ico">🧭</span> 2. Orientación de discontinuidades (F₀)</div>
+        <div class="panel-body">
+          <p class="hint">Seleccione el tipo de estructura y la condición de orientación.</p>
+          <div class="orient-grid">
+            <div>
+              <label>Tipo de estructura</label>
+              <select id="workType">
+                <option value="tunnel" selected>🚇 Túneles</option>
+                <option value="foundation">🏗 Cimentaciones</option>
+                <option value="slope">⛰ Taludes</option>
+              </select>
+            </div>
+            <div>
+              <label>Condición de orientación</label>
+              <select id="f0"></select>
+            </div>
+            <div>
+              <label>F₀</label>
+              <div class="score" id="scoreF0">-5</div>
+            </div>
+          </div>
+          <p class="hint" id="orientationText" style="margin-top:12px"></p>
+        </div>
+      </section>
+
+      <section class="panel">
+        <div class="panel-title green"><span class="ico">📊</span> 3. Resultados</div>
+        <div class="panel-body">
+          <div class="results-box">
+            <div class="metric"><small>RMRb (básico)</small><strong id="resBasic">60</strong></div>
+            <div class="metric"><small>F₀ (orientación)</small><strong class="red" id="resF0">-5</strong></div>
+            <div class="metric"><small>RMR 1989</small><strong class="green" id="resFinal">55</strong></div>
+          </div>
+          <div class="class-card">
+            <div class="class-left">
+              <h3 style="margin-top:0;color:var(--green)">Clasificación del macizo rocoso</h3>
+              <h2 id="className">Clase III - Media</h2>
+              <div id="stars" class="stars">★★★<span class="star-off">★★</span></div>
+              <p id="qualityWord">Calidad del macizo: Media</p>
+            </div>
+            <div class="class-right">
+              <h3 style="margin-top:0;color:var(--blue)">Interpretación</h3>
+              <p id="interpretation">Macizo con calidad media. Requiere sostenimiento sistemático.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+    </aside>
+
+    <main class="main">
+      <section class="classification">
+        <div class="panel-title gold"><span class="ico">🏆</span> Clasificación del macizo rocoso</div>
+        <div class="class-summary">
+          <div class="summary-cell"><small>Clase RMR</small><strong id="sumClass">Clase III - Media</strong></div>
+          <div class="summary-cell"><small>Rango RMR</small><strong id="sumRange">41 - 60</strong></div>
+          <div class="summary-cell"><small>Calidad del macizo</small><strong><span id="sumStars" class="stars">★★★<span class="star-off">★★</span></span><br><span id="sumQuality" style="font-size:16px;color:#ffd966">Media</span></strong></div>
+        </div>
+        <div class="info-strip" id="infoStrip">Macizo con calidad media. Requiere sostenimiento sistemático.</div>
+      </section>
+
+      <section class="visual">
+        <div class="visual-head">
+          <div>🛠 GIF de sostenimiento requerido según el resultado</div>
+          <div>GIF dinámico <span class="toggle">AUTO</span></div>
+        </div>
+        <div class="result-banner" id="resultBanner">Resultado actual: Clase III - Media | RMR final = 55</div>
+        <div class="gifbox">
+          <img id="supportGif" src="assets/sostenimiento_III.gif" alt="GIF dinámico de sostenimiento RMR">
+        </div>
+        <div class="support-cards">
+          <div class="support-card"><h4>Excavación / avance</h4><p id="cardExc">Avance y destroza. Avance típico de 1.5 a 3 m.</p></div>
+          <div class="support-card"><h4>Pernos de roca</h4><p id="cardBolts">Sistemáticamente en clave y hastiales. L = 4 m. Espaciamiento 1.5 - 2.0 m.</p></div>
+          <div class="support-card"><h4>Concreto lanzado</h4><p id="cardShot">50 - 100 mm en clave. 30 mm en hastiales.</p></div>
+          <div class="support-card"><h4>Cerchas / soporte adicional</h4><p id="cardSteel">No necesarias.</p></div>
+        </div>
+        <p style="text-align:center;color:#d9e5f2;font-size:14px;padding:0 18px 18px" id="sequenceText">
+          El GIF muestra en orden el sostenimiento típico de la clase obtenida.
+        </p>
+      </section>
+
+      <section class="detail-panel">
+        <div class="panel-title"><span class="ico">🔎</span> Detalle del cálculo actual</div>
+        <div class="detail-grid">
+          <div class="detail-card">
+            <h4>R1 y R2 seleccionados</h4>
+            <p id="detailR1">R1 = 7 porque la resistencia seleccionada es 50 - 100 MPa.</p>
+            <p id="detailR2" style="margin-top:8px">R2 = 13 porque el RQD seleccionado es 50 - 75%.</p>
+          </div>
+          <div class="detail-card">
+            <h4>Resumen numérico</h4>
+            <p id="detailSummary">RMRb = 60; F₀ = -5; RMR final = 55.</p>
+            <p style="margin-top:8px">La guía de fórmulas completa se abre desde el botón <strong>“Guía de fórmulas”</strong>, sin mostrarse en la pantalla principal.</p>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <section class="table-panel" style="margin-top:16px">
+    <div class="panel-title"><span class="ico">📘</span> Cuadro de excavación y sostenimiento según RMR (1989) – español peruano</div>
+    <table>
+      <thead>
+        <tr>
+          <th>Clase</th><th>RMR</th><th>Avance típico</th><th>Excavación / avance</th><th>Pernos de roca</th><th>Concreto lanzado</th><th>Cerchas metálicas</th>
+        </tr>
+      </thead>
+      <tbody id="supportRows">
+        <tr data-class="I"><td><span class="class-pill c1">I Muy buena</span></td><td>81 - 100</td><td>3 m</td><td>Sección completa.</td><td>Ocasionales.</td><td>No necesario.</td><td>No necesarias.</td></tr>
+        <tr data-class="II"><td><span class="class-pill c2">II Buena</span></td><td>61 - 80</td><td>1 - 1.5 m</td><td>Sección completa. Sostenimiento terminado a 20 m del avance.</td><td>Localmente en clave. L = 3 m, espaciados a 2.5 m, con mallazo ocasional.</td><td>50 mm en clave donde sea necesario.</td><td>No necesarias.</td></tr>
+        <tr data-class="III"><td><span class="class-pill c3">III Media</span></td><td>41 - 60</td><td>1.5 - 3 m</td><td>Avance y destroza. Sostenimiento empezado en el frente y terminado a 10 m del frente.</td><td>Sistemáticamente en clave y hastiales. L = 4 m, espaciados de 1.5 a 2.0 m, con mallazo en clave.</td><td>50 - 100 mm en clave. 30 mm en hastiales.</td><td>No necesarias.</td></tr>
+        <tr data-class="IV"><td><span class="class-pill c4">IV Mala</span></td><td>21 - 40</td><td>1.0 - 1.5 m</td><td>Avance y destroza. Sostenimiento simultáneo con la excavación y hasta 10 m del frente.</td><td>Sistemáticamente en clave y hastiales. L = 4 - 5 m, espaciados de 1.0 - 1.5 m, con mallazo.</td><td>100 - 150 mm en clave. 100 mm en hastiales.</td><td>Ligeras a medias, espaciadas a 1.5 m donde sea necesario.</td></tr>
+        <tr data-class="V"><td><span class="class-pill c5">V Muy mala</span></td><td>1 - 20</td><td>0.5 - 1.5 m</td><td>Galerías múltiples. Sostenimiento simultáneo con la excavación. Concreto lanzado inmediatamente después de la voladura.</td><td>Sistemáticamente en clave y hastiales. L = 5 - 6 m, espaciados de 1.0 - 1.5 m, con mallazo. Bulonar contrabóveda.</td><td>150 - 200 mm en clave. 150 mm en hastiales. 50 mm en el frente.</td><td>Medias a pesadas, espaciadas a 0.75 - 1.0 m, con forro y longarinas donde sea necesario.</td></tr>
+      </tbody>
+    </table>
+    <div class="note">Nota: valores referenciales. Adaptar el sostenimiento según condiciones reales del sitio y criterio del especialista.</div>
+  </section>
+
+  <div class="legend">
+    <span>La guía de fórmulas ya no aparece en la pantalla principal. Se abre por botón.</span>
+  </div>
+</div>
+
+<div class="modal" id="guideModal">
+  <div class="modal-content">
+    <h2>Guía rápida de uso</h2>
+    <ol>
+      <li>Seleccione los puntajes de R1 a R5 según sus datos de campo y laboratorio.</li>
+      <li>El sistema suma R1 + R2 + R3 + R4 + R5 para obtener el RMR básico.</li>
+      <li>Seleccione el tipo de estructura y la orientación para obtener F₀.</li>
+      <li>Se calcula el RMR final y se muestra la clase obtenida.</li>
+      <li>El GIF cambia automáticamente según la clase RMR y muestra el sostenimiento típico.</li>
+    </ol>
+    <button class="blue" onclick="closeGuide()">Cerrar</button>
+  </div>
+</div>
+
+<div class="modal" id="formulaModal">
+  <div class="modal-content">
+    <h2>Guía de fórmulas y asignación de puntajes</h2>
+
+    <h3>1) Fórmulas generales</h3>
+    <p><strong>RMRb = R1 + R2 + R3 + R4 + R5</strong></p>
+    <p><strong>RMR final = RMRb + F₀</strong></p>
+
+    <h3>2) Significado de cada parámetro</h3>
+    <ul>
+      <li><strong>R1:</strong> resistencia de la roca intacta.</li>
+      <li><strong>R2:</strong> RQD del macizo.</li>
+      <li><strong>R3:</strong> espaciamiento de discontinuidades.</li>
+      <li><strong>R4:</strong> condición de las discontinuidades.</li>
+      <li><strong>R5:</strong> condición de agua subterránea.</li>
+    </ul>
+
+    <h3>3) ¿Cómo sale R1? (resistencia de la roca intacta)</h3>
+    <p>El cálculo usa la fila de <strong>compresión simple (MPa)</strong> del RMR 1989.</p>
+    <table class="modal-table">
+      <thead>
+        <tr>
+          <th>Ensayo de carga puntual Is(50) MPa</th>
+          <th>&gt;10</th>
+          <th>10 - 4</th>
+          <th>4 - 2</th>
+          <th>2 - 1</th>
+          <th>1 - 0.5</th>
+          <th>0.5 - 0.25</th>
+          <th>&lt;0.25</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <th>Compresión simple (MPa)</th>
+          <td>&gt;250</td>
+          <td>250 - 100</td>
+          <td>100 - 50</td>
+          <td>50 - 25</td>
+          <td>25 - 5</td>
+          <td>5 - 1</td>
+          <td>&lt;1</td>
+        </tr>
+        <tr>
+          <th>Puntaje R1</th>
+          <td>15</td><td>12</td><td>7</td><td>4</td><td>2</td><td>1</td><td>0</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h3>4) ¿Cómo sale R2? (RQD del macizo)</h3>
+    <table class="modal-table">
+      <thead>
+        <tr>
+          <th>RQD (%)</th>
+          <th>90 - 100%</th>
+          <th>75 - 90%</th>
+          <th>50 - 75%</th>
+          <th>25 - 50%</th>
+          <th>&lt;25%</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <th>Puntaje R2</th>
+          <td>20</td><td>17</td><td>13</td><td>6</td><td>3</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h3>5) Ejemplo con la selección actual</h3>
+    <p id="modalExampleR1">R1 = 7 porque la resistencia seleccionada es 50 - 100 MPa.</p>
+    <p id="modalExampleR2">R2 = 13 porque el RQD seleccionado es 50 - 75%.</p>
+    <p id="modalExampleTotal">RMRb = 60; F₀ = -5; RMR final = 55.</p>
+
+    <button class="blue" onclick="closeFormulaGuide()">Cerrar</button>
+  </div>
+</div>
+
+<script>
+const orientationOptions = {
+  tunnel: [
+    {label:"Muy favorable", value:0, help:"Perpendicular al eje del túnel, avance con buzamiento, buzamiento 45° - 90°."},
+    {label:"Favorable", value:-2, help:"Perpendicular al eje del túnel, avance con buzamiento, buzamiento 20° - 45°."},
+    {label:"Media", value:-5, help:"Condición media para túneles."},
+    {label:"Desfavorable", value:-10, help:"Perpendicular al eje del túnel, avance contra buzamiento, buzamiento 20° - 45°."},
+    {label:"Muy desfavorable", value:-12, help:"Paralela al eje del túnel con buzamiento 45° - 90°."}
+  ],
+  foundation: [
+    {label:"Muy favorable", value:0, help:"Condición muy favorable para cimentaciones."},
+    {label:"Favorable", value:-2, help:"Condición favorable para cimentaciones."},
+    {label:"Media", value:-7, help:"Condición media para cimentaciones."},
+    {label:"Desfavorable", value:-15, help:"Condición desfavorable para cimentaciones."},
+    {label:"Muy desfavorable", value:-25, help:"Condición muy desfavorable para cimentaciones."}
+  ],
+  slope: [
+    {label:"Muy favorable", value:0, help:"Condición muy favorable para taludes."},
+    {label:"Favorable", value:-5, help:"Condición favorable para taludes."},
+    {label:"Media", value:-25, help:"Condición media para taludes."},
+    {label:"Desfavorable", value:-50, help:"Condición desfavorable para taludes."},
+    {label:"Muy desfavorable", value:-60, help:"Condición muy desfavorable para taludes."}
+  ]
+};
+
+const classes = [
+  {cls:"I", name:"Clase I - Muy buena", range:"81 - 100", quality:"Muy buena", stars:5,
+   interp:"Macizo muy competente y estable. Generalmente requiere sostenimiento mínimo.",
+   exc:"Sección completa. Avance típico de 3 m.", bolts:"Ocasionales.", shot:"No necesario.", steel:"No necesarias."},
+  {cls:"II", name:"Clase II - Buena", range:"61 - 80", quality:"Buena", stars:4,
+   interp:"Macizo estable. Puede requerir sostenimiento localizado donde sea necesario.",
+   exc:"Sección completa. Avance de 1 a 1.5 m.", bolts:"Localmente en clave. L = 3 m, espaciados a 2.5 m.", shot:"50 mm en clave donde sea necesario.", steel:"No necesarias."},
+  {cls:"III", name:"Clase III - Media", range:"41 - 60", quality:"Media", stars:3,
+   interp:"Macizo con calidad media. Requiere sostenimiento sistemático.",
+   exc:"Avance y destroza. Avance típico de 1.5 a 3 m.", bolts:"Sistemáticamente en clave y hastiales. L = 4 m. Espaciamiento 1.5 - 2.0 m.", shot:"50 - 100 mm en clave. 30 mm en hastiales.", steel:"No necesarias."},
+  {cls:"IV", name:"Clase IV - Mala", range:"21 - 40", quality:"Mala", stars:2,
+   interp:"Macizo de mala calidad. Requiere sostenimiento importante e inmediato.",
+   exc:"Avance y destroza. Avance típico de 1.0 a 1.5 m.", bolts:"Sistemáticamente en clave y hastiales. L = 4 - 5 m. Espaciamiento 1.0 - 1.5 m.", shot:"100 - 150 mm en clave. 100 mm en hastiales.", steel:"Ligeras a medias, espaciadas a 1.5 m donde sea necesario."},
+  {cls:"V", name:"Clase V - Muy mala", range:"1 - 20", quality:"Muy mala", stars:1,
+   interp:"Macizo muy inestable. Requiere soporte inmediato y pesado.",
+   exc:"Galerías múltiples. Avance típico de 0.5 a 1.5 m.", bolts:"Sistemáticamente en clave y hastiales. L = 5 - 6 m. Bulonar contrabóveda.", shot:"150 - 200 mm en clave. 150 mm en hastiales. 50 mm en el frente.", steel:"Medias a pesadas, espaciadas a 0.75 - 1.0 m, con forro y longarinas."}
+];
+
+const r1Map = {
+  15: "> 250 MPa",
+  12: "100 - 250 MPa",
+  7: "50 - 100 MPa",
+  4: "25 - 50 MPa",
+  2: "5 - 25 MPa",
+  1: "1 - 5 MPa",
+  0: "< 1 MPa"
+};
+
+const r2Map = {
+  20: "90 - 100%",
+  17: "75 - 90%",
+  13: "50 - 75%",
+  6: "25 - 50%",
+  3: "< 25%"
+};
+
+["r1","r2","r3","r4","r5","workType","f0"].forEach(id=>{
+  document.getElementById(id).addEventListener("change", id==="workType" ? populateF0 : calculate);
+});
+
+function populateF0(){
+  const type = document.getElementById("workType").value;
+  const sel = document.getElementById("f0");
+  sel.innerHTML = "";
+  orientationOptions[type].forEach(opt => {
+    const o = document.createElement("option");
+    o.value = opt.value;
+    o.textContent = opt.label;
+    o.dataset.help = opt.help;
+    if(type==="tunnel" && opt.value===-5) o.selected = true;
+    sel.appendChild(o);
+  });
+  calculate();
+}
+
+function getClass(score){
+  if(score >= 81) return classes[0];
+  if(score >= 61) return classes[1];
+  if(score >= 41) return classes[2];
+  if(score >= 21) return classes[3];
+  return classes[4];
+}
+
+function starHTML(n){
+  return "★".repeat(n) + '<span class="star-off">' + "★".repeat(5-n) + "</span>";
+}
+
+function calculate(){
+  const r1 = +document.getElementById("r1").value;
+  const r2 = +document.getElementById("r2").value;
+  const r3 = +document.getElementById("r3").value;
+  const r4 = +document.getElementById("r4").value;
+  const r5 = +document.getElementById("r5").value;
+  const f0 = +document.getElementById("f0").value;
+  const rmrb = r1+r2+r3+r4+r5;
+  const final = rmrb + f0;
+  const c = getClass(final);
+
+  document.getElementById("scoreR1").textContent = r1;
+  document.getElementById("scoreR2").textContent = r2;
+  document.getElementById("scoreR3").textContent = r3;
+  document.getElementById("scoreR4").textContent = r4;
+  document.getElementById("scoreR5").textContent = r5;
+  document.getElementById("rmrb").textContent = rmrb;
+  document.getElementById("scoreF0").textContent = f0;
+  document.getElementById("orientationText").textContent = document.getElementById("f0").selectedOptions[0]?.dataset.help || "";
+
+  document.getElementById("resBasic").textContent = rmrb;
+  document.getElementById("resF0").textContent = f0;
+  document.getElementById("resFinal").textContent = final;
+  document.getElementById("className").textContent = c.name;
+  document.getElementById("qualityWord").textContent = "Calidad del macizo: " + c.quality;
+  document.getElementById("stars").innerHTML = starHTML(c.stars);
+  document.getElementById("interpretation").textContent = c.interp;
+
+  document.getElementById("sumClass").textContent = c.name;
+  document.getElementById("sumRange").textContent = c.range;
+  document.getElementById("sumStars").innerHTML = starHTML(c.stars);
+  document.getElementById("sumQuality").textContent = c.quality;
+  document.getElementById("infoStrip").textContent = c.interp;
+
+  document.getElementById("cardExc").textContent = c.exc;
+  document.getElementById("cardBolts").textContent = c.bolts;
+  document.getElementById("cardShot").textContent = c.shot;
+  document.getElementById("cardSteel").textContent = c.steel;
+
+  document.getElementById("resultBanner").textContent = `Resultado actual: ${c.name} | RMR final = ${final}`;
+  document.getElementById("sequenceText").textContent = `Se muestra el GIF ordenado del sostenimiento típico para ${c.name}.`;
+  document.getElementById("supportGif").src = `assets/sostenimiento_${c.cls}.gif?${Date.now()}`;
+
+  document.getElementById("detailR1").textContent = `R1 = ${r1} porque la resistencia seleccionada es ${r1Map[r1]} .`;
+  document.getElementById("detailR2").textContent = `R2 = ${r2} porque el RQD seleccionado es ${r2Map[r2]} .`;
+  document.getElementById("detailSummary").textContent = `RMRb = ${rmrb}; F₀ = ${f0}; RMR final = ${final}.`;
+
+  document.getElementById("modalExampleR1").textContent = `R1 = ${r1} porque la resistencia seleccionada es ${r1Map[r1]}.`;
+  document.getElementById("modalExampleR2").textContent = `R2 = ${r2} porque el RQD seleccionado es ${r2Map[r2]}.`;
+  document.getElementById("modalExampleTotal").textContent = `RMRb = ${rmrb}; F₀ = ${f0}; RMR final = ${final}.`;
+
+  document.querySelectorAll("#supportRows tr").forEach(tr => tr.classList.toggle("active-row", tr.dataset.class === c.cls));
+}
+
+function resetAll(){
+  document.getElementById("r1").value = "7";
+  document.getElementById("r2").value = "13";
+  document.getElementById("r3").value = "10";
+  document.getElementById("r4").value = "20";
+  document.getElementById("r5").value = "10";
+  document.getElementById("workType").value = "tunnel";
+  populateF0();
+}
+function openGuide(){ document.getElementById("guideModal").classList.add("open"); }
+function closeGuide(){ document.getElementById("guideModal").classList.remove("open"); }
+function openFormulaGuide(){ document.getElementById("formulaModal").classList.add("open"); }
+function closeFormulaGuide(){ document.getElementById("formulaModal").classList.remove("open"); }
+
+populateF0();
+</script>
+</body>
+</html>

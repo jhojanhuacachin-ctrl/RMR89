@@ -1,23 +1,13 @@
-# Calculadora RMR 1989
+# Calculadora RMR89 – versión ajustada
 
-Este paquete contiene una calculadora web completa del sistema RMR 1989 de Bieniawski.
-
-## Archivos incluidos
-
-- `index.html`: archivo principal listo para GitHub Pages.
-- `calculadora_rmr89.html`: copia alternativa del mismo archivo.
-- `README.md`: instrucciones.
-
-## Cómo publicarlo en GitHub Pages
-
-1. Sube todos los archivos al repositorio.
-2. Asegúrate de que exista `index.html` en la raíz del repositorio.
-3. En GitHub entra a **Settings > Pages**.
-4. En **Build and deployment**, selecciona:
-   - Source: Deploy from a branch
-   - Branch: main
-   - Folder: /root
-5. Guarda los cambios.
-6. Espera unos minutos y abre el enlace de GitHub Pages.
-
-Si aparece error 404, revisa que el archivo se llame exactamente `index.html`.
+## Cambios realizados
+- La guía de fórmulas ya no aparece en la pantalla principal.
+- La guía de fórmulas se abre con el botón correspondiente.
+- Se agregó la explicación específica de cómo se obtiene:
+  - R1: resistencia de la roca intacta
+  - R2: RQD del macizo
+- En la pantalla principal se muestra un detalle breve del cálculo actual:
+  - valor elegido
+  - puntaje obtenido para R1 y R2
+  - resumen de RMRb, F0 y RMR final
+- El GIF se mantiene ordenado y sigue cambiando según la clase resultante.
